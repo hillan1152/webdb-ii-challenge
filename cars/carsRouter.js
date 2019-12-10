@@ -3,15 +3,16 @@ const express = require('express');
 const knex = require('knex');
 
 // HOOK UP DATABASE USING KNEX
-const config = require('../knexfile.js')
+const config = require('../knexfile.js');
 const db = knex(config.development);
-// const db = knex({
-// 	client: 'sqlite3',
-// 	connection: {
-// 		filename: './data/cars.db3'
-// 	},
-// 	useNullAsDefault: true
-// });
+// BELOW IS EQUIVALENT TO ABOVE
+            // const db = knex({
+            // 	client: 'sqlite3',
+            // 	connection: {
+            // 		filename: './data/cars.db3'
+            // 	},S
+            // 	useNullAsDefault: true
+            // });
 
 // HOOK UP ROUTER
 const router = express.Router();
@@ -31,6 +32,7 @@ router.get('/:id', (req, res) => {
     db('car-dealer')
         .where({ id }).first()
 		.then((car) => {
+            console.log(car)
 			res.status(200).json(car);
 		})
 		.catch((err) => {
@@ -54,5 +56,8 @@ router.post('/', (req, res) => {
 			res.status(500).json({ message: 'Failed to post data.' });
 		});
 });
+
+// MIDDLEWARE
+
 
 module.exports = router;

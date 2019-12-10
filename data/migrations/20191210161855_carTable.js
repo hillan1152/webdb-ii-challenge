@@ -17,10 +17,10 @@ exports.up = function(knex) {
     tbl.integer("mileage")
         .notNullable()
 
-    tbl.string("transmission-type")
+    tbl.string("transmission_type")
         .nullable();
 
-    tbl.string("title-status")
+    tbl.string("title_status")
         .nullable();
   })
 };
