@@ -27,7 +27,7 @@ router.get('/', (req, res) => {
 			res.status(500).json({ message: 'Failed to retrieve cars' });
 		});
 });
-router.get('/:id', (req, res) => {
+router.get('/:id', validateCarId, (req, res) => {
 	const { id } = req.params;
     db('car-dealer')
         .where({ id }).first()
@@ -57,7 +57,8 @@ router.post('/', (req, res) => {
 		});
 });
 
-router.put('/:id', (req, res) => {
+// UPDATE
+router.put('/:id', validateCarId, (req, res) => {
     const changes = req.body;
     const { id } = req.params;
 
@@ -77,7 +78,9 @@ router.put('/:id', (req, res) => {
             res.status(500).json({ errorMessage: "Error updating this car." });
           });
 })
-router.delete('/:id', (req, res) => {
+
+// DELETE CAR
+router.delete('/:id', validateCarId, (req, res) => {
     const { id } = req.params;
 
     db('car-dealer')
@@ -100,6 +103,23 @@ router.delete('/:id', (req, res) => {
 
 
 // MIDDLEWARE
+function validateCarId(req, res, next){
+    const { id } = req.params;
 
+    db('car-dealer')
+        .where({ id })
+        .first()
+        .then(car => {
+            if(!car){
+                res.status(400).json({ message: "Invalid Car ID." })
+            } else {
+                req.car = car;
+                next();
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ error: "The cars information could not be retrieved."})
+          })
+}
 
 module.exports = router;
