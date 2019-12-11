@@ -57,6 +57,48 @@ router.post('/', (req, res) => {
 		});
 });
 
+router.put('/:id', (req, res) => {
+    const changes = req.body;
+    const { id } = req.params;
+
+    db('car-dealer')
+        .where({ id })
+        .update(changes)
+        .then(count => {
+            if(count > 0) {
+                console.log(count)
+                res.status(200).json({ message: `${count} car updated.` });
+            } else {
+                res.status(404).json({ message: `Post not found.` });
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({ errorMessage: "Error updating this car." });
+          });
+})
+router.delete('/:id', (req, res) => {
+    const { id } = req.params;
+
+    db('car-dealer')
+        .where({ id })
+        .del()
+        .then(count => {
+            if(count > 0) {
+                console.log(count)
+                res.status(200).json({ message: `${count} car deleted.` });
+            } else {
+                res.status(404).json({ message: `Delete not found.` });
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({ errorMessage: "Error updating this car." });
+          });
+})
+
+
+
 // MIDDLEWARE
 
 
